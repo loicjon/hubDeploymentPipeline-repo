@@ -44,6 +44,7 @@
                 ]
             }
         },
+        
         {
             "name": "[parameters('afname')]",
             "type": "Microsoft.Network/azureFirewalls",
