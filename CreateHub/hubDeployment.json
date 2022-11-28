@@ -80,7 +80,6 @@
             },
             "properties": {
                 "publicIPAllocationMethod": "Static",
-                "publicIPPrefix":{"id": "addressPrefix"},
                 "ipAddress": "10.18.2.0/26",
                 "dnsSettings": {
                     "domainNameLabel": "[concat('afname', uniqueString(resourceGroup().id))]"
