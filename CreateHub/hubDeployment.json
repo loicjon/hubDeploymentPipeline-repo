@@ -1,0 +1,97 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "hubVnet",
+            "metadata": {
+                "description": "Le Hub"
+            }
+        },
+        "afname": {
+            "type": "string",
+            "defaultValue": "afirewallhub1",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+
+//Vnet
+            "name": "[parameters('vnetName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[parameters('vnetName')]"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.18.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "hubSubnet-1",
+                        "properties": {
+                            "addressPrefix": "10.18.0.0/24"
+                        }
+                    }
+
+                ]
+            }
+        },
+
+
+        
+//Firewall
+        {
+            "name": "[parameters('afname')]",
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "properties": {
+                "hubIPAddresses": {
+                    "privateIPAddress": "string",
+                    "publicIPs": {
+                        "addresses": [
+                            {
+                                "address": "10.18.1.0/26"
+                            }
+                        ]
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'publicIPAddress1')]"
+            ]
+        },
+        {
+            "name": "publicIPAddress1",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "standard"
+            },
+            "tags": {
+                "createdFor": "afname"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "ipAddress": "10.18.2.0/26",
+                "dnsSettings": {
+                    "domainNameLabel": "[concat('afname', uniqueString(resourceGroup().id))]"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
