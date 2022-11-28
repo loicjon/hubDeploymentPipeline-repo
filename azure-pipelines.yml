@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps: 
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'HubDeploiement-conn'
+    subscriptionId: 'dcbde5ac-b981-45f9-b8b6-f77efa07ab2a'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'WEULBURSGZZZF00'
+    location: 'West Europe'
+    templateLocation: 'URL of the file'
+    csmFileLink: 'https://raw.githubusercontent.com/loicjon/hubDeploymentPipeline-repo/main/CreateHub/hubDeployment.json'
+    deploymentMode: 'Incremental'
+    deploymentName: 'DeploymentPipeline'
