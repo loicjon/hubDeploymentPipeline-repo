@@ -21,8 +21,6 @@
     "variables": {},
     "resources": [
         {
-
-//Vnet
             "name": "[parameters('vnetName')]",
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2020-11-01",
@@ -43,14 +41,9 @@
                             "addressPrefix": "10.18.0.0/24"
                         }
                     }
-
                 ]
             }
         },
-
-
-        
-//Firewall
         {
             "name": "[parameters('afname')]",
             "type": "Microsoft.Network/azureFirewalls",
@@ -70,7 +63,8 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'publicIPAddress1')]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'publicIPAddress1')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
             ]
         },
         {
@@ -79,7 +73,7 @@
             "apiVersion": "2020-11-01",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "standard"
+                "name": "Standard"
             },
             "tags": {
                 "createdFor": "afname"
