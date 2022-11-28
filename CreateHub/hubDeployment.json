@@ -63,7 +63,7 @@
                       "[resourceId('Microsoft.Network/azureFirewalls', parameters('afname'))]",
                       "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
                   ]
-          }  
+          }  ,
 
         {
             "name": "[parameters('afname')]",
