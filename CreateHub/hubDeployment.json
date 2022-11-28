@@ -47,6 +47,25 @@
         
 
         {
+            "type": "Microsoft.Network/vpnGateways",
+            "apiVersion": "2020-05-01",
+            "name": "VpnGateway",
+            "location": "westeurope",
+            "properties": {
+              "virtualHub": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+              },
+              "bgpSettings": {
+                "asn": 65515
+              }
+            },
+                        "dependsOn": [
+                      "[resourceId('Microsoft.Network/azureFirewalls', parameters('afname'))]",
+                      "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                  ]
+          }  
+
+        {
             "name": "[parameters('afname')]",
             "type": "Microsoft.Network/azureFirewalls",
             "apiVersion": "2020-11-01",
