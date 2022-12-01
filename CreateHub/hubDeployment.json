@@ -9,7 +9,17 @@
                 "description": "Le Hub"
             }
         },
-        "bastion": {
+
+        "bastionName": {
+            "type": "string",
+            "defaultValue": "AzureBastion",
+            "metadata": {
+                "description": "la ressource Bastion"
+            }
+        },
+
+
+        "bastionSubnet": {
             "type": "string",
             "defaultValue": "AzureBastionSubnet",
             "metadata": {
@@ -17,25 +27,56 @@
             }
         },
 
-        "firewall": {
+        "firewallName": {
+            "type": "string",
+            "defaultValue": "AzureFirewall",
+            "metadata": {
+                "description": "la ressource firewall"
+            }
+        },
+
+        "firewallSubnet": {
             "type": "string",
             "defaultValue": "AzureFirewallSubnet",
             "metadata": {
                 "description": "la ressource firewall"
             }
         },
-        "gateway": {
+
+        "publicAdress": {
+            "type": "string",
+            "defaultValue": "hubPublicIPAddress",
+            "metadata": {
+                "description": "la ressource firewall"
+            }
+        },
+
+        "gatewayName": {
+            "type": "string",
+            "defaultValue": "Gateway",
+            "metadata": {
+                "description": "la ressource Gateway"
+            }
+        },
+
+
+        "gatewaySubnet": {
             "type": "string",
             "defaultValue": "GatewaySubnet",
             "metadata": {
                 "description": "la ressource Gateway"
             }
         }
-        
+
     },
     "functions": [],
     "variables": {},
     "resources": [
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Vnet /////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
         {
             "name": "[parameters('vnetName')]",
             "type": "Microsoft.Network/virtualNetworks",
@@ -52,7 +93,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('bastion')]",
+                        "name": "[parameters('bastionSubnet')]",
                         "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/AzureBastionSubnet",
                         "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
@@ -67,11 +108,10 @@
                         "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
                     {
-                        "name": "[parameters('firewall')]",
+                        "name": "[parameters('firewallSubnet')]",
                         "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/AzureFirewallSubnet",
                         "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
-                            "provisioningState": "Succeeded",
                             "addressPrefix": "10.16.0.64/26",
                             "ipConfigurations": [
                                 {
@@ -82,7 +122,7 @@
                         "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
                     {
-                        "name": "[parameters('gateway')]",
+                        "name": "[parameters('gatewaySubnet')]",
                         "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/GatewaySubnet",
                         "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
@@ -93,8 +133,135 @@
                     }
                 ]
             }
-        }
+        },
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Firewall /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        {
+            "name": "[parameters('firewallName')]",
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "properties": {
+
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfigName",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('virtualNetworkResourceGroup', 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('firewallSubnet'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicAdress'))]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicAdress'))]"
+            ]
+        },
+        {
+            "name": "[parameters('publicAdress')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "tags": {
+                "createdFor": "[parameters('firewallName')]"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
+                }
+            }
+        },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Gateway //////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        {
+            "name": "[parameters('gatewayName')]",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicAdress'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "vnetGatewayConfig",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnet'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicAdress'))]"
+                            }
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "Basic",
+                    "tier": "Basic"
+                },
+                "gatewayType": "Vpn",
+                "vpnType": "PolicyBased",
+                "enableBgp": true
+            }
+        },
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Bastion //////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        {
+            "type": "Microsoft.Network/bastionHosts",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('bastionName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "disableCopyPaste": "bool",
+                "enableFileCopy": "bool",
+                "enableIpConnect": "bool",
+                "enableShareableLink": "bool",
+                "enableTunneling": "bool",
+                "ipConfigurations": [
+                    {
+                        "name": "bastionHostIP",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicAdress'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('bastionSubnet'))]"
+                            }
+                        }
+                    }
+                ]
+
+            }
+        }
 
     ],
     "outputs": {}
