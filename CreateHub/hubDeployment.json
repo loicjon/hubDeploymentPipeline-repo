@@ -214,8 +214,8 @@
                     }
                 ],
                 "sku": {
-                    "name": "Standard",
-                    "tier": "Standard"
+                    "name": "Basic",
+                    "tier": "Basic"
                 },
                 "gatewayType": "Vpn",
                 "vpnType": "PolicyBased",
