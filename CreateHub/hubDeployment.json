@@ -52,22 +52,44 @@
                 },
                 "subnets": [
                     {
-                        "name": "AzureBastionSubnet",
+                        "name": "[parameters('bastion')]",
+                        "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/AzureBastionSubnet",
+                        "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
-                            "addressPrefix": "10.16.0.0/26"
-                        }
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.16.0.0/26",
+                            "ipConfigurations": [
+                                {
+                                    "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/bastionHosts/AzureBastionSubnet/bastionHostIpConfigurations/IpConf"
+                                }
+                            ]
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
                     {
-                        "name": "AzureFirewallSubnet",
+                        "name": "[parameters('firewall')]",
+                        "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/AzureFirewallSubnet",
+                        "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
-                            "addressPrefix": "10.16.0.64/26"
-                        }
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.16.0.64/26",
+                            "ipConfigurations": [
+                                {
+                                    "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/azureFirewalls/AzureFirewallSubnet/azureFirewallIpConfigurations/IpConf"
+                                }
+                            ]
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
                     {
-                        "name": "GatewaySubnet",
+                        "name": "[parameters('gateway)]",
+                        "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/GatewaySubnet",
+                        "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
+                            "provisioningState": "Succeeded",
                             "addressPrefix": "10.16.0.128/26"
-                        }
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
                     }
                 ]
             }
