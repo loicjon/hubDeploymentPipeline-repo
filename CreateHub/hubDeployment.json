@@ -82,7 +82,7 @@
                         "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
                     {
-                        "name": "[parameters('gateway)]",
+                        "name": "[parameters('gateway')]",
                         "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/GatewaySubnet",
                         "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
