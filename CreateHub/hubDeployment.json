@@ -9,13 +9,29 @@
                 "description": "Le Hub"
             }
         },
-        "afname": {
+        "bastion": {
             "type": "string",
-            "defaultValue": "afirewallhub1",
+            "defaultValue": "AzureBastionSubnet",
             "metadata": {
-                "description": "description"
+                "description": "la ressource Bastion"
+            }
+        },
+
+        "firewall": {
+            "type": "string",
+            "defaultValue": "AzureFirewallSubnet",
+            "metadata": {
+                "description": "la ressource firewall"
+            }
+        },
+        "gateway": {
+            "type": "string",
+            "defaultValue": "GatewaySubnet",
+            "metadata": {
+                "description": "la ressource Gateway"
             }
         }
+        
     },
     "functions": [],
     "variables": {},
@@ -31,63 +47,33 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.18.0.0/16"
+                        "10.16.0.0/16"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "hubSubnet-1",
+                        "name": "AzureBastionSubnet",
                         "properties": {
-                            "addressPrefix": "10.18.0.0/24"
+                            "addressPrefix": "10.16.0.0/26"
+                        }
+                    },
+                    {
+                        "name": "AzureFirewallSubnet",
+                        "properties": {
+                            "addressPrefix": "10.16.0.64/26"
+                        }
+                    },
+                    {
+                        "name": "GatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "10.16.0.128/26"
                         }
                     }
                 ]
             }
-        },
-
-
-        {
-            "name": "[parameters('afname')]",
-            "type": "Microsoft.Network/azureFirewalls",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "tags": {},
-            "properties": {
-                "hubIPAddresses": {
-                    "privateIPAddress": "string",
-                    "publicIPs": {
-                        "addresses": [
-                            {
-                                "address": "10.18.1.0/26"
-                            }
-                        ]
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'publicIPAddress1')]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
-            ]
-        },
-        {
-            "name": "publicIPAddress1",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard"
-            },
-            "tags": {
-                "createdFor": "afname"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static",
-                "ipAddress": "10.18.2.0/26",
-                "dnsSettings": {
-                    "domainNameLabel": "[concat('afname', uniqueString(resourceGroup().id))]"
-                }
-            }
         }
+
+
     ],
     "outputs": {}
 }
