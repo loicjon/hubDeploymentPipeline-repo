@@ -177,10 +177,10 @@
                 "createdFor": "[parameters('firewallName')]"
             },
             "properties": {
-                "publicIPAllocationMethod": "Static",
-                "dnsSettings": {
-                    "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
-                }
+                "publicIPAllocationMethod": "Static"
+   //             "dnsSettings": {
+   //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
+   //             }
             }
         },
 
