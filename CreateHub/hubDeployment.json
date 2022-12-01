@@ -214,8 +214,8 @@
                     }
                 ],
                 "sku": {
-                    "name": "Basic",
-                    "tier": "Basic"
+                    "name": "Standard",
+                    "tier": "Standard"
                 },
                 "gatewayType": "Vpn",
                 "vpnType": "PolicyBased",
@@ -240,11 +240,6 @@
                 "name": "Basic"
             },
             "properties": {
-                "disableCopyPaste": "bool",
-                "enableFileCopy": "bool",
-                "enableIpConnect": "bool",
-                "enableShareableLink": "bool",
-                "enableTunneling": "bool",
                 "ipConfigurations": [
                     {
                         "name": "bastionHostIP",
