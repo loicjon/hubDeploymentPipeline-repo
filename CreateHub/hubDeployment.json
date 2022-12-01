@@ -29,7 +29,7 @@
 
         "firewallName": {
             "type": "string",
-            "defaultValue": "aFirewall",
+            "defaultValue": "a-Firewall",
             "metadata": {
                 "description": "la ressource firewall"
             }
