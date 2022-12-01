@@ -177,7 +177,7 @@
                 "createdFor": "[parameters('firewallName')]"
             },
             "properties": {
-                "publicIPAllocationMethod": "Static"
+                "publicIPAllocationMethod": "Dynamic"
    //             "dnsSettings": {
    //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
    //             }
