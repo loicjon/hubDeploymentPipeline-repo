@@ -29,7 +29,7 @@
 
         "firewallName": {
             "type": "string",
-            "defaultValue": "AzureFirewall",
+            "defaultValue": "aFirewall",
             "metadata": {
                 "description": "la ressource firewall"
             }
