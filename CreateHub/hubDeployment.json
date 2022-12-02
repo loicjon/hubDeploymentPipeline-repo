@@ -29,7 +29,7 @@
 
         "firewallName": {
             "type": "string",
-            "defaultValue": "a-Firewall",
+            "defaultValue": "AzureFirewall",
             "metadata": {
                 "description": "la ressource firewall"
             }
@@ -164,7 +164,6 @@
                 "[resourceId('Microsoft.Network/publicIPAddresses', parameters('firewallPublicAdress'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
             ],
-            "tags": {},
             "properties": {
 
                 "ipConfigurations": [
