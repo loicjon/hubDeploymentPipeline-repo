@@ -160,6 +160,10 @@
             "type": "Microsoft.Network/azureFirewalls",
             "apiVersion": "2020-11-01",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('firewallPublicAdress'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+            ],
             "tags": {},
             "properties": {
 
@@ -167,7 +171,7 @@
                     {
                         "name": "ipConfigName",
                         "properties": {
-                            "privateIPAllocationMethod": "Static",
+                            "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
                                 "id": "[resourceId('virtualNetworkResourceGroup', 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('firewallSubnet'))]"
                             },
@@ -177,11 +181,15 @@
                         }
                     }
                 ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('firewallPublicAdress'))]"
-            ]
+            }
         },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Firewall PublicIP ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         {
             "name": "[parameters('firewallPublicAdress')]",
             "type": "Microsoft.Network/publicIPAddresses",
@@ -202,45 +210,9 @@
         },
 
 
-        {
-            "name": "[parameters('gatewayPublicAdress')]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard"
-            },
-            "tags": {
-                "createdFor": "[parameters('gatewayName')]"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static"
-                //             "dnsSettings": {
-                //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
-                //             }
-            }
-        },
 
 
 
-        {
-            "name": "[parameters('bastionPublicAdress')]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard"
-            },
-            "tags": {
-                "createdFor": "[parameters('bastionName')]"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static"
-                //             "dnsSettings": {
-                //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
-                //             }
-            }
-        },
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////// Gateway //////////////////////////////////////////////
@@ -281,6 +253,32 @@
         },
 
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Gateway PublicIP /////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        {
+            "name": "[parameters('gatewayPublicAdress')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "tags": {
+                "createdFor": "[parameters('gatewayName')]"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+                //             "dnsSettings": {
+                //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
+                //             }
+            }
+        },
+
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////// Bastion //////////////////////////////////////////////
@@ -316,6 +314,31 @@
                     }
                 ]
 
+            }
+        },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////// Bastion PublicIP//////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        {
+            "name": "[parameters('bastionPublicAdress')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "tags": {
+                "createdFor": "[parameters('bastionName')]"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+                //             "dnsSettings": {
+                //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
+                //             }
             }
         }
 
