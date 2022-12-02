@@ -160,10 +160,7 @@
             "type": "Microsoft.Network/azureFirewalls",
             "apiVersion": "2020-11-01",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('firewallPublicAdress'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
-            ],
+
             "properties": {
 
                 "ipConfigurations": [
@@ -206,72 +203,14 @@
                 //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
                 //             }
             }
-        },
-
-
-
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////// Gateway //////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        {
-            "name": "[parameters('gatewayName')]",
-            "type": "Microsoft.Network/virtualNetworkGateways",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "vnetGatewayConfig",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnet'))]"
-                            },
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicAdress'))]"
-                            }
-                        }
-                    }
-                ],
-                "sku": {
-                    "name": "VpnGw1",
-                    "tier": "VpnGw1"
-                },
-                "gatewayType": "Vpn",
-                "vpnType": "RouteBased",
-                "enableBgp": false
-            }
-        },
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////// Gateway PublicIP /////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        {
-            "name": "[parameters('gatewayPublicAdress')]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard"
-            },
-            "tags": {
-                "createdFor": "[parameters('gatewayName')]"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static"
-                //             "dnsSettings": {
-                //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
-                //             }
-            }
         }
+
+
+
+
+
+
+
 
     ],
     "outputs": {}
