@@ -222,10 +222,7 @@
             "type": "Microsoft.Network/virtualNetworkGateways",
             "apiVersion": "2020-11-01",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicAdress'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
-            ],
+
             "properties": {
                 "ipConfigurations": [
                     {
@@ -267,71 +264,6 @@
             },
             "tags": {
                 "createdFor": "[parameters('gatewayName')]"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Static"
-                //             "dnsSettings": {
-                //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
-                //             }
-            }
-        },
-
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////// Bastion //////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        {
-            "type": "Microsoft.Network/bastionHosts",
-            "apiVersion": "2020-11-01",
-            "name": "[parameters('bastionName')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastionPublicAdress'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
-            ],
-            "tags": {},
-            "sku": {
-                "name": "Basic"
-            },
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "bastionHostIP",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastionPublicAdress'))]"
-                            },
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('bastionSubnet'))]"
-                            }
-                        }
-                    }
-                ]
-
-            }
-        },
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////// Bastion PublicIP//////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        {
-            "name": "[parameters('bastionPublicAdress')]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard"
-            },
-            "tags": {
-                "createdFor": "[parameters('bastionName')]"
             },
             "properties": {
                 "publicIPAllocationMethod": "Static"
