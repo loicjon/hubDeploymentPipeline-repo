@@ -108,44 +108,44 @@
                     ]
                 },
                 "subnets": [
-
                     {
-
                         "name": "[parameters('bastionSubnet')]",
-
+                        "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/AzureBastionSubnet",
+                        "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
-
-                            "addressPrefix": "10.16.0.0/26"
-
-                        }
-
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.16.0.0/26",
+                            "ipConfigurations": [
+                                {
+                                    "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/bastionHosts/AzureBastionSubnet/bastionHostIpConfigurations/IpConf"
+                                }
+                            ]
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
-
-
-
                     {
-
                         "name": "[parameters('firewallSubnet')]",
-
+                        "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/AzureFirewallSubnet",
+                        "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
-
-                            "addressPrefix": "10.16.0.64/26"
-
-                        }
-
+                            "addressPrefix": "10.16.0.64/26",
+                            "ipConfigurations": [
+                                {
+                                    "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/azureFirewalls/AzureFirewallSubnet/azureFirewallIpConfigurations/IpConf"
+                                }
+                            ]
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
-
-
                     {
-
                         "name": "[parameters('gatewaySubnet')]",
-
+                        "id": "/subscriptions/dcbde5ac-b981-45f9-b8b6-f77efa07ab2a/resourceGroups/WEULBURSGZZZF00/providers/Microsoft.Network/virtualNetworks/hubVnet/subnets/GatewaySubnet",
+                        "etag": "W/\"b95160dc-e28a-4fe6-9b9d-018571c5d038\"",
                         "properties": {
-
+                            "provisioningState": "Succeeded",
                             "addressPrefix": "10.16.0.128/26"
-
-                        }
-
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
                     }
                 ]
             }
@@ -172,7 +172,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[resourceId('virtualNetworkResourceGroup', 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('firewallSubnet'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('firewallSubnet'))]"
                             },
                             "publicIPAddress": {
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('firewallPublicAdress'))]"
@@ -213,7 +213,133 @@
 
 
 
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////// Gateway //////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // {
+        //     "name": "[parameters('gatewayName')]",
+        //     "type": "Microsoft.Network/virtualNetworkGateways",
+        //     "apiVersion": "2020-11-01",
+        //     "location": "[resourceGroup().location]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicAdress'))]",
+        //         "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+        //     ],
+        //     "properties": {
+        //         "ipConfigurations": [
+        //             {
+        //                 "name": "vnetGatewayConfig",
+        //                 "properties": {
+        //                     "privateIPAllocationMethod": "Dynamic",
+        //                     "subnet": {
+        //                         "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnet'))]"
+        //                     },
+        //                     "publicIPAddress": {
+        //                         "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('gatewayPublicAdress'))]"
+        //                     }
+        //                 }
+        //             }
+        //         ],
+        //         "sku": {
+        //             "name": "VpnGw1",
+        //             "tier": "VpnGw1"
+        //         },
+        //         "gatewayType": "Vpn",
+        //         "vpnType": "RouteBased",
+        //         "enableBgp": false
+        //     }
+        // },
+
+
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////// Gateway PublicIP /////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // {
+        //     "name": "[parameters('gatewayPublicAdress')]",
+        //     "type": "Microsoft.Network/publicIPAddresses",
+        //     "apiVersion": "2020-11-01",
+        //     "location": "[resourceGroup().location]",
+        //     "sku": {
+        //         "name": "Standard"
+        //     },
+        //     "tags": {
+        //         "createdFor": "[parameters('gatewayName')]"
+        //     },
+        //     "properties": {
+        //         "publicIPAllocationMethod": "Static"
+        //         //             "dnsSettings": {
+        //         //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
+        //         //             }
+        //     }
+        // },
+
+
+
+
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////// Bastion //////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // {
+        //     "type": "Microsoft.Network/bastionHosts",
+        //     "apiVersion": "2020-11-01",
+        //     "name": "[parameters('bastionName')]",
+        //     "location": "[resourceGroup().location]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastionPublicAdress'))]",
+        //         "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+        //     ],
+        //     "tags": {},
+        //     "sku": {
+        //         "name": "Basic"
+        //     },
+        //     "properties": {
+        //         "ipConfigurations": [
+        //             {
+        //                 "name": "bastionHostIP",
+        //                 "properties": {
+        //                     "privateIPAllocationMethod": "Dynamic",
+        //                     "publicIPAddress": {
+        //                         "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastionPublicAdress'))]"
+        //                     },
+        //                     "subnet": {
+        //                         "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('bastionSubnet'))]"
+        //                     }
+        //                 }
+        //             }
+        //         ]
+
+        //     }
+        // },
+
+
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////// Bastion PublicIP//////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // {
+        //     "name": "[parameters('bastionPublicAdress')]",
+        //     "type": "Microsoft.Network/publicIPAddresses",
+        //     "apiVersion": "2020-11-01",
+        //     "location": "[resourceGroup().location]",
+        //     "sku": {
+        //         "name": "Standard"
+        //     },
+        //     "tags": {
+        //         "createdFor": "[parameters('bastionName')]"
+        //     },
+        //     "properties": {
+        //         "publicIPAllocationMethod": "Static"
+        //         //             "dnsSettings": {
+        //         //                 "domainNameLabel": "[concat(parameters('firewallName'), uniqueString(resourceGroup().id))]"
+        //         //             }
+        //     }
+        // }
 
     ],
     "outputs": {}
